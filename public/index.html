@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Licensing Premium Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="neo-card">
+            <div class="brand">
+                <h1>VORTEX <span class="gold-text">ADMIN</span></h1>
+                <p>Bot Validation & Management System</p>
+            </div>
+            <div class="status-indicator">
+                <span class="dot"></span> System Online
+            </div>
+        </header>
+
+        <section class="stats-grid">
+            <div class="neo-card stat-card">
+                <h3>Total Registered</h3>
+                <p id="totalBots" class="counter">0</p>
+                <div class="progress-bar"><div class="fill" style="width: 100%"></div></div>
+            </div>
+            <div class="neo-card stat-card">
+                <h3>Blacklisted</h3>
+                <p id="totalBlacklisted" class="counter danger-text">0</p>
+                <div class="progress-bar"><div class="fill danger-fill" style="width: 100%"></div></div>
+            </div>
+            <div class="neo-card stat-card">
+                <h3>Active Licenses</h3>
+                <p id="totalActive" class="counter success-text">0</p>
+                <div class="progress-bar"><div class="fill success-fill" style="width: 100%"></div></div>
+            </div>
+        </section>
+
+        <main class="main-content">
+            <section class="neo-card table-section">
+                <div class="section-header">
+                    <h2>Live Database</h2>
+                    <button onclick="fetchBots()" class="neo-btn icon-btn">
+                        <span>↻ Refresh Data</span>
+                    </button>
+                </div>
+                <div class="table-wrapper">
+                    <table id="botTable">
+                        <thead>
+                            <tr>
+                                <th>Bot ID</th>
+                                <th>Store Name</th>
+                                <th>Owner ID</th>
+                                <th>Username</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="neo-card playground-section">
+                <div class="section-header">
+                    <h2>Interactive Playground</h2>
+                    <div class="endpoint-tabs">
+                        <button class="neo-btn tab-active" onclick="switchTab('register')">Register</button>
+                        <button class="neo-btn" onclick="switchTab('check')">Check</button>
+                    </div>
+                </div>
+
+                <div id="tab-register" class="tab-content active">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>Bot ID</label>
+                            <input type="text" id="pg-botId" placeholder="e.g. 123456">
+                        </div>
+                        <div class="input-group">
+                            <label>Owner ID</label>
+                            <input type="text" id="pg-ownerId" placeholder="e.g. 998877">
+                        </div>
+                        <div class="input-group">
+                            <label>Store Name</label>
+                            <input type="text" id="pg-storeName" placeholder="e.g. Vapestore">
+                        </div>
+                        <div class="input-group">
+                            <label>Username</label>
+                            <input type="text" id="pg-username" placeholder="e.g. @owner">
+                        </div>
+                    </div>
+                    <button onclick="testApi('register')" class="neo-btn action-btn full-width">EXECUTE POST /register</button>
+                </div>
+
+                <div id="tab-check" class="tab-content">
+                    <div class="input-group">
+                        <label>Target Bot ID</label>
+                        <input type="text" id="pg-check-botId" placeholder="Enter Bot ID to validate">
+                    </div>
+                    <button onclick="testApi('check')" class="neo-btn action-btn full-width">EXECUTE GET /check/:id</button>
+                </div>
+
+                <div class="console-output">
+                    <div class="console-header">
+                        <span>SERVER RESPONSE</span>
+                        <span class="latency" id="latency">0ms</span>
+                    </div>
+                    <pre><code id="jsonOutput">// Menunggu eksekusi...</code></pre>
+                </div>
+            </section>
+        </main>
+
+        <section class="neo-card docs-section">
+            <h2>Developer Documentation</h2>
+            <div class="code-container">
+                <div class="code-header">Node.js Integration Example</div>
+                <pre><code class="language-javascript">
+const axios = require('axios');
+const API_URL = 'https://your-domain.vercel.app/api';
+
+async function validateBot(botId) {
+    try {
+        // 1. Check License Status
+        const response = await axios.get(`${API_URL}/check/${botId}`);
+        
+        if (!response.data.status) {
+            console.error('⛔ Access Denied: Bot is Blacklisted');
+            return false;
+        }
+
+        console.log('✅ Access Granted:', response.data.message);
+        return true;
+
+    } catch (error) {
+        console.error('Connection Error:', error.message);
+        return false;
+    }
+}
+
+// 2. Register New Bot (First Run)
+async function registerBot() {
+    await axios.post(`${API_URL}/register`, {
+        botId: "12345",
+        ownerId: "67890",
+        storeName: "My Store",
+        ownerUsername: "@admin"
+    });
+}
+                </code></pre>
+            </div>
+        </section>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

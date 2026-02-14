@@ -1,0 +1,37 @@
+Pengembangan API Validasi Bot Telegram & Dashboard Management (Node.js Express & MongoDB)
+
+Buatkan kode full-stack menggunakan Node.js dan Express yang berfungsi sebagai sistem lisensi dan validasi ID Bot. Sistem ini harus mendukung deployment di Vercel dan menggunakan MongoDB sebagai database permanen.
+
+Struktur File & Arsitektur:
+Sertakan kode lengkap untuk file-file berikut:
+1. api/allroute.js: Berisi skema Mongoose (BotSchema), koneksi database, dan semua logika endpoint API.
+2. public/index.html, public/style.css, public/script.js: Frontend Dashboard untuk monitoring dan interaksi API.
+3. app.js: Entry point utama yang menghubungkan middleware, static files dari folder public, dan routing dari api/allroute.js.
+4. package.json: Dependencies (express, mongoose, cors, dotenv, dll).
+5. vercel.json: Konfigurasi serverless function agar file app.js dapat berjalan di Vercel.
+
+Detail Fitur API (Endpoint):
+1. POST /api/register (First Connect):
+Fields: botId, ownerId, storeName, ownerUsername.
+Logika: Jika botId belum ada di database, simpan data baru dengan status default isBlacklisted: false. Jika sudah ada, abaikan (jangan duplikat).
+
+2. GET /api/check/:botId (Validation):
+Logika: Lakukan pencarian berdasarkan botId.
+Return: Jika ID ditemukan dan isBlacklisted adalah true, kembalikan status: false. Jika tidak terdaftar atau tidak diblacklist, kembalikan status: true.
+
+3. GET /api/list (Database View):
+Logika: Menampilkan semua data bot yang terdaftar (Bot ID, Owner ID, Store Name, Owner Username, dan Status Blacklist).
+
+4. PATCH /api/blacklist (Management):
+Fields: botId, action (blacklist/unblacklist).
+Logika: Mengubah status isBlacklisted pada bot yang spesifik.
+
+Kebutuhan Frontend & UI:
+- Buatlah dashboard yang bersih dan responsif.
+- Tampilkan tabel daftar bot yang mengambil data dari /api/list.
+- Sertakan bagian "Example Usage" yang menunjukkan dokumentasi cara melakukan request ke API (contoh fetch atau axios).
+- Berikan tombol aksi di setiap baris tabel untuk melakukan toggle blacklist secara langsung.
+
+Catatan Tambahan:
+- Pastikan koneksi MongoDB menggunakan process.env.MONGODB_URI.
+- Gunakan struktur module.exports yang tepat agar kompatibel dengan Vercel Serverless Functions.
